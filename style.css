@@ -583,3 +583,22 @@ body {
     min-height: 100vh;
   }
 }
+
+/* Transparent circular overlay positioned directly over the merry-go-round (400px diameter, centered at 400,350) */
+.drag-wheel-overlay {
+  position: absolute;
+  left: 200px; /* 400 - 200 */
+  top: 150px;  /* 350 - 200 */
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  cursor: grab;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0); /* transparent but clickable */
+  touch-action: none;
+}
+
+.drag-wheel-overlay:active {
+  cursor: grabbing;
+}
+

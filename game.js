@@ -26,7 +26,7 @@ const CATEGORY_MOUSE = 0x0008;
 const canvas = document.createElement('canvas');
 canvas.width = 800;
 canvas.height = 700;
-document.getElementById('canvas-holder').appendChild(canvas);
+document.getElementById('canvas-wrapper').appendChild(canvas);
 const ctx = canvas.getContext('2d');
 
 // Engine & World
@@ -46,6 +46,7 @@ let dummies = [];
 let particles = [];
 let shouts = [];
 let nextNameIndex = 0;
+let isDraggingWheel = false;
 
 // High Score / Telemetry Record
 let maxRPMValue = 0;
@@ -375,35 +376,41 @@ function resetSimulation() {
   Body.setAngle(wheel, 0);
   Body.setAngularVelocity(wheel, 0);
   Body.setVelocity(wheel, { x: 0, y: 0 });
+  if (typeof gsap !== 'undefined') {
+    gsap.set('#drag-overlay', { rotation: 0 });
+  }
 
   // Spawn two initial dummies at opposite sides
   spawnDummy(0);
   spawnDummy(Math.PI);
 }
 
-// Setup Mouse Constraints to drag and throw the wheel
-let mouseConstraint;
+// Setup GSAP Draggable for smooth rotation and flick/inertia physics
 function setupMouseInteraction() {
-  const mouse = Mouse.create(canvas);
-  
-  // Set up MouseConstraint
-  mouseConstraint = MouseConstraint.create(engine, {
-    mouse: mouse,
-    constraint: {
-      stiffness: 0.8, // high stiffness makes it responsive to flics
-      render: { visible: false }
+  const dragOverlay = document.getElementById('drag-overlay');
+  if (!dragOverlay) return;
+
+  // Initialize GSAP Draggable to rotate the overlay circle
+  Draggable.create(dragOverlay, {
+    type: "rotation",
+    onDragStart: function() {
+      isDraggingWheel = true;
+    },
+    onDrag: function() {
+      // Set the physical wheel's angle to match the GSAP element's rotation
+      const radAngle = this.rotation * Math.PI / 180;
+      Body.setAngle(wheel, radAngle);
+
+      // getVelocity('rotation') returns degrees per second.
+      // Convert to radians per frame (assuming 60 FPS) to match Matter.js angular velocity.
+      const radPerSec = this.getVelocity('rotation') * Math.PI / 180;
+      const radPerFrame = radPerSec / 60;
+      Body.setAngularVelocity(wheel, radPerFrame);
+    },
+    onDragEnd: function() {
+      isDraggingWheel = false;
     }
   });
-
-  // Filter so mouse ONLY grabs the wheel
-  mouseConstraint.collisionFilter.category = CATEGORY_MOUSE;
-  mouseConstraint.collisionFilter.mask = CATEGORY_WHEEL;
-
-  World.add(world, mouseConstraint);
-
-  // Keep the mouse in sync with canvas scroll/position
-  // (Matter.js Mouse needs this if canvas position shifts)
-  mouse.pixelRatio = window.devicePixelRatio || 1;
 }
 
 // Particles (Splats and mechanical shards on collision)
@@ -545,6 +552,12 @@ Events.on(engine, 'collisionStart', function(event) {
 
 // Update logic loop
 function update() {
+  // Sync GSAP overlay rotation with physical wheel rotation when spinning freely
+  if (!isDraggingWheel && typeof gsap !== 'undefined') {
+    const degAngle = wheel.angle * 180 / Math.PI;
+    gsap.set('#drag-overlay', { rotation: degAngle });
+  }
+
   // 1. Calculate velocity and G-Forces
   const omega = Math.abs(wheel.angularVelocity) * 60; // rad/sec
   const rMeters = 2.0; // 200px = 2 meters
