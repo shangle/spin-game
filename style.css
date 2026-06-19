@@ -1,0 +1,585 @@
+/* Core 90s Crash Test Dummy Theme Variables */
+:root {
+  --color-warning-yellow: #ffcc00;
+  --color-dark-gray: #222222;
+  --color-light-gray: #e0e0e0;
+  --color-panel-bg: #ecece8;
+  --color-border-dark: #333333;
+  --color-safety-orange: #f05a28;
+  --color-safety-blue: #007bc4;
+  --color-safety-red: #d1121b;
+  --color-lcd-bg: #8ba888; /* Classic retro green-gray LCD */
+  --color-lcd-text: #1d2a1c;
+  --font-logo: 'Bungee', Impact, 'Arial Narrow Bold', sans-serif;
+  --font-telemetry: 'Share Tech Mono', monospace;
+  --font-marker: 'Permanent Marker', cursive;
+  --font-body: 'Arial', sans-serif;
+}
+
+/* Global resets & scrollbars */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #f7f7f2;
+  color: var(--color-dark-gray);
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border: 4px solid var(--color-border-dark);
+  position: relative;
+}
+
+/* Hazard diagonal stripes */
+.hazard-stripe-top {
+  height: 24px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-warning-yellow),
+    var(--color-warning-yellow) 15px,
+    var(--color-dark-gray) 15px,
+    var(--color-dark-gray) 30px
+  );
+  border-bottom: 4px solid var(--color-border-dark);
+}
+
+.hazard-stripe-bottom {
+  height: 24px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-warning-yellow),
+    var(--color-warning-yellow) 15px,
+    var(--color-dark-gray) 15px,
+    var(--color-dark-gray) 30px
+  );
+  border-top: 4px solid var(--color-border-dark);
+}
+
+/* Main Layout: Split between simulation and control */
+.main-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  background-color: #e3e3dc;
+}
+
+/* Left side: Canvas Simulator */
+.canvas-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-right: 4px solid var(--color-border-dark);
+  background-color: #d8d8ce;
+  position: relative;
+}
+
+.arena-header {
+  height: 60px;
+  background-color: var(--color-warning-yellow);
+  border-bottom: 4px solid var(--color-border-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.arena-header h1 {
+  font-family: var(--font-logo);
+  font-size: 2rem;
+  color: var(--color-dark-gray);
+  letter-spacing: 2px;
+}
+
+/* Telemetry warnings inside the Arena Header */
+.danger-flasher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.danger-flasher .warning-text {
+  font-family: var(--font-telemetry);
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--color-dark-gray);
+}
+
+.light {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border-dark);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.6);
+}
+
+.red-light {
+  background-color: var(--color-safety-red);
+}
+
+.flashing {
+  animation: flash 0.6s infinite alternate;
+}
+
+@keyframes flash {
+  from {
+    background-color: #ff3c3c;
+    box-shadow: 0 0 8px #ff0000, inset 0 2px 4px rgba(255,255,255,0.6);
+  }
+  to {
+    background-color: #5a0000;
+    box-shadow: none;
+  }
+}
+
+#canvas-holder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #e5e5dd; /* Grid pattern background will be drawn in canvas */
+}
+
+/* Canvas element border */
+#canvas-holder canvas {
+  border: 4px solid var(--color-border-dark);
+  box-shadow: 6px 6px 0px rgba(0,0,0,0.15);
+  background-color: #f0f0e8;
+  display: block;
+}
+
+.arena-footer {
+  height: 36px;
+  background-color: var(--color-dark-gray);
+  color: var(--color-warning-yellow);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  overflow: hidden;
+}
+
+.instructions-ticker {
+  font-family: var(--font-telemetry);
+  font-size: 1.1rem;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* Right side: Control Panel Dashboard */
+.control-panel {
+  width: 420px;
+  background-color: var(--color-panel-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 18px;
+  overflow-y: auto;
+}
+
+.panel-header {
+  text-align: center;
+  border: 3px solid var(--color-border-dark);
+  background-color: #ffffff;
+  padding: 10px;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+.logo-box h2 {
+  font-family: var(--font-logo);
+  font-size: 1.8rem;
+  line-height: 1.1;
+  color: var(--color-dark-gray);
+  margin: 5px 0;
+  text-shadow: 2px 2px 0px #cccccc;
+}
+
+.yellow-text {
+  color: var(--color-warning-yellow);
+  -webkit-text-stroke: 1px var(--color-border-dark);
+  text-shadow: 2px 2px 0px var(--color-border-dark);
+}
+
+.checker-strip {
+  height: 8px;
+  background: repeating-conic-gradient(
+    #fff 0% 25%, 
+    #000 0% 50%
+  ) 50% / 16px 16px;
+}
+
+.subtitle {
+  font-family: var(--font-telemetry);
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #555555;
+  border-top: 1px dashed var(--color-border-dark);
+  padding-top: 5px;
+  margin-top: 5px;
+}
+
+/* Telemetry Screen - 90s Industrial Digital Console */
+.telemetry-screen {
+  border: 4px solid var(--color-border-dark);
+  background-color: var(--color-border-dark);
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: inset 2px 2px 8px rgba(0,0,0,0.5);
+}
+
+.screen-glass {
+  background-color: var(--color-lcd-bg);
+  padding: 12px;
+  border: 2px solid #5a7558;
+  border-radius: 2px;
+  color: var(--color-lcd-text);
+  font-family: var(--font-telemetry);
+}
+
+.telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 15px;
+}
+
+.telemetry-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.telemetry-item.mini {
+  flex: 1;
+}
+
+.telemetry-item .label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #3b4d3a;
+  border-bottom: 1px solid rgba(0,0,0,0.15);
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+.telemetry-item .value {
+  font-size: 2.2rem;
+  font-weight: bold;
+  line-height: 1;
+  text-align: right;
+}
+
+.telemetry-item .value.mini {
+  font-size: 1.4rem;
+}
+
+.telemetry-item .unit {
+  font-size: 1.1rem;
+  margin-left: 4px;
+  color: #4b6349;
+}
+
+/* Speed Bar indicator */
+.speed-bar-container {
+  margin-bottom: 12px;
+}
+
+.speed-bar-container .label {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #3b4d3a;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.led-segments {
+  height: 18px;
+  display: flex;
+  gap: 3px;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 2px;
+  border-radius: 2px;
+}
+
+.led-segment {
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 1px;
+  transition: background-color 0.1s ease;
+}
+
+/* Green, Yellow, Orange, Red LED active states */
+.led-segment.green.active { background-color: #27ae60; box-shadow: 0 0 2px #2ecc71; }
+.led-segment.yellow.active { background-color: #f1c40f; box-shadow: 0 0 2px #f39c12; }
+.led-segment.orange.active { background-color: #e67e22; box-shadow: 0 0 2px #d35400; }
+.led-segment.red.active { background-color: #c0392b; box-shadow: 0 0 2px #e74c3c; }
+
+/* Subject list styles */
+.dummies-status {
+  margin-top: 10px;
+  border-top: 2px solid rgba(0,0,0,0.15);
+  padding-top: 10px;
+}
+
+.section-label {
+  margin-bottom: 8px;
+  display: block;
+}
+
+.dummy-telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  padding: 4px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.dummy-telemetry-row .status-name {
+  font-weight: bold;
+}
+
+.dummy-telemetry-row .status-grip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dummy-telemetry-row .grip-fill-container {
+  width: 80px;
+  height: 10px;
+  background-color: rgba(0,0,0,0.25);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.dummy-telemetry-row .grip-fill {
+  height: 100%;
+  background-color: #27ae60;
+  width: 100%;
+  transition: width 0.05s linear;
+}
+
+.dummy-telemetry-row.slipping .grip-fill {
+  background-color: #e67e22;
+}
+
+.dummy-telemetry-row.danger .grip-fill {
+  background-color: #c0392b;
+}
+
+.dummy-telemetry-row.flyoff {
+  color: #6d1a12;
+  background-color: rgba(200, 50, 50, 0.15);
+}
+
+.dummy-telemetry-row.flyoff .grip-fill-container {
+  display: none;
+}
+
+/* Settings Sliders Panel */
+.settings-panel {
+  border: 3px solid var(--color-border-dark);
+  background-color: #fdfdf9;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.setting-group label {
+  font-family: var(--font-telemetry);
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-border-dark);
+}
+
+.setting-group .slider-val {
+  color: var(--color-safety-orange);
+}
+
+/* 90s slider styling */
+.setting-group input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  background: var(--color-light-gray);
+  border: 2px solid var(--color-border-dark);
+  outline: none;
+}
+
+.setting-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background-color: var(--color-warning-yellow);
+  border: 3px solid var(--color-border-dark);
+  cursor: pointer;
+  border-radius: 2px;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+}
+
+.setting-group input[type="range"]::-webkit-slider-thumb:active {
+  background-color: var(--color-safety-orange);
+}
+
+/* Retro Command buttons */
+.command-center {
+  display: flex;
+  gap: 15px;
+}
+
+.retro-btn {
+  font-family: var(--font-logo);
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: 3px solid var(--color-border-dark);
+  padding: 12px;
+  font-weight: bold;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  user-select: none;
+}
+
+.blue-btn {
+  background-color: var(--color-safety-blue);
+  color: white;
+  flex: 1;
+  box-shadow: 4px 4px 0px var(--color-border-dark);
+  text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
+}
+
+.blue-btn:hover {
+  background-color: #0b93e6;
+}
+
+.blue-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0px var(--color-border-dark);
+}
+
+/* Big Red Emergency Stop Button */
+.red-btn {
+  background-color: #990000;
+  padding: 4px; /* Frame around button */
+  flex: 1.2;
+  box-shadow: 4px 4px 0px var(--color-border-dark);
+}
+
+.red-btn .btn-cap {
+  background-color: var(--color-safety-red);
+  color: white;
+  border: 2px solid var(--color-border-dark);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
+  box-shadow: inset 0px 4px 0px rgba(255,255,255,0.3);
+}
+
+.red-btn:hover .btn-cap {
+  background-color: #e6222b;
+}
+
+.red-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0px var(--color-border-dark);
+}
+
+.red-btn:active .btn-cap {
+  box-shadow: inset 0px 2px 2px rgba(0,0,0,0.4);
+}
+
+/* Warning Label sticker at bottom */
+.safety-sticker {
+  border: 2px dashed #b54708;
+  background-color: #fef0c7;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 4px;
+}
+
+.warning-symbol-logo {
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-warning-yellow);
+  border: 2px solid var(--color-border-dark);
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+  /* Draw a warning symbol triangle or exclamation point inside */
+  background-image: repeating-conic-gradient(
+    #ffcc00 0% 25%, 
+    #000 0% 50%
+  );
+  background-size: 100% 100%;
+}
+
+.sticker-text {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: #b54708;
+}
+
+.sticker-text strong {
+  color: #903102;
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 1000px) {
+  .main-layout {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .canvas-container {
+    border-right: none;
+    border-bottom: 4px solid var(--color-border-dark);
+  }
+  
+  .control-panel {
+    width: 100%;
+    height: auto;
+    overflow-y: visible;
+  }
+  
+  body {
+    overflow: auto;
+  }
+  
+  .app-container {
+    height: auto;
+    min-height: 100vh;
+  }
+}

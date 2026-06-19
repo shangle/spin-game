@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incredible Spin Dummies - Physics Simulator</title>
+  <!-- Google Fonts for 90s Warning and Telemetry Look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Permanent+Marker&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <!-- Core Matter.js Physics Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <!-- Custom Styling -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Caution Ribbon -->
+    <div class="hazard-stripe-top"></div>
+
+    <div class="main-layout">
+      <!-- Left side: The Testing Arena Canvas -->
+      <div class="canvas-container">
+        <div class="arena-header">
+          <div class="danger-flasher">
+            <span class="light red-light flashing"></span>
+            <span class="warning-text">TEST IN PROGRESS</span>
+          </div>
+          <h1>SPIN ZONE</h1>
+          <div class="danger-flasher">
+            <span class="warning-text">CAUTION: HIGH RPM</span>
+            <span class="light red-light flashing"></span>
+          </div>
+        </div>
+        <div id="canvas-holder">
+          <!-- Matter.js Canvas will be appended here -->
+        </div>
+        <div class="arena-footer">
+          <div class="instructions-ticker">
+            <span>&lt;&lt; GRAB THE WHEEL DIRECTLY AND FLING IT TO SPIN THE DUMMIES! &gt;&gt;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right side: Controls and Telemetry -->
+      <aside class="control-panel">
+        <header class="panel-header">
+          <div class="logo-box">
+            <div class="checker-strip"></div>
+            <h2>INCREDIBLE<br><span class="yellow-text">SPIN DUMMIES</span></h2>
+            <div class="checker-strip"></div>
+          </div>
+          <p class="subtitle">DEPT. OF INVOLUNTARY ROTATIONAL TESTING</p>
+        </header>
+
+        <!-- Digital Telemetry Screen -->
+        <section class="telemetry-screen">
+          <div class="screen-glass">
+            <div class="telemetry-row">
+              <div class="telemetry-item">
+                <span class="label">VELOCITY</span>
+                <span class="value" id="rpm-value">000<span class="unit">RPM</span></span>
+              </div>
+              <div class="telemetry-item">
+                <span class="label">G-FORCE</span>
+                <span class="value" id="gforce-value">0.0<span class="unit">G</span></span>
+              </div>
+            </div>
+
+            <!-- LED Speed Bar -->
+            <div class="speed-bar-container">
+              <span class="label">RPM LOAD SENSOR</span>
+              <div class="led-segments" id="speed-leds">
+                <!-- Segments will be filled via JS -->
+              </div>
+            </div>
+
+            <div class="telemetry-row split-row">
+              <div class="telemetry-item mini">
+                <span class="label">RECORD RPM</span>
+                <span class="value mini" id="max-rpm">000</span>
+              </div>
+              <div class="telemetry-item mini">
+                <span class="label">MAX G-FORCE</span>
+                <span class="value mini" id="max-gforce">0.0</span>
+              </div>
+            </div>
+
+            <!-- Dummies Telemetry List -->
+            <div class="dummies-status">
+              <span class="label section-label">SUBJECT STATUS TELEMETRY</span>
+              <div id="dummies-list">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interactive Adjustments Panel -->
+        <section class="settings-panel">
+          <div class="setting-group">
+            <label for="grip-slider">
+              <span>GRIP STRENGTH</span>
+              <span class="slider-val" id="grip-val">100%</span>
+            </label>
+            <input type="range" id="grip-slider" min="20" max="250" value="100">
+          </div>
+
+          <div class="setting-group">
+            <label for="weight-slider">
+              <span>DUMMY MASS (KG)</span>
+              <span class="slider-val" id="weight-val">80</span>
+            </label>
+            <input type="range" id="weight-slider" min="30" max="200" value="80">
+          </div>
+
+          <div class="setting-group">
+            <label for="joint-slider">
+              <span>JOINT STRENGTH</span>
+              <span class="slider-val" id="joint-val">NORMAL</span>
+            </label>
+            <input type="range" id="joint-slider" min="1" max="4" value="2" step="1">
+          </div>
+        </section>
+
+        <!-- Command Buttons -->
+        <section class="command-center">
+          <button id="btn-spawn" class="retro-btn blue-btn">
+            SPAWN DUMMY
+          </button>
+          
+          <button id="btn-reset" class="retro-btn red-btn">
+            <div class="btn-cap">RESET TEST</div>
+          </button>
+        </section>
+
+        <!-- Warning Label Sticker -->
+        <footer class="safety-sticker">
+          <div class="warning-symbol-logo"></div>
+          <div class="sticker-text">
+            <strong>WARNING:</strong> LIMB SEPARATION WILL OCCUR UPON HIGH-SPEED IMPACTS. NOT A TOY. DUMMIES ARE PROFESSIONALS.
+          </div>
+        </footer>
+      </aside>
+    </div>
+
+    <!-- Bottom Caution Ribbon -->
+    <div class="hazard-stripe-bottom"></div>
+  </div>
+
+  <!-- Game Logic -->
+  <script src="game.js"></script>
+</body>
+</html>
