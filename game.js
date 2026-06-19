@@ -390,6 +390,10 @@ function setupMouseInteraction() {
   const dragOverlay = document.getElementById('drag-overlay');
   if (!dragOverlay) return;
 
+  let lastRotation = 0;
+  let lastTime = 0;
+  let rotationVelocity = 0; // degrees per millisecond
+
   // Initialize GSAP Draggable to rotate the overlay circle
   Draggable.create(dragOverlay, {
     type: "rotation",
@@ -397,20 +401,38 @@ function setupMouseInteraction() {
       isDraggingWheel = true;
       // Make the wheel static during drag so it doesn't fight constraints from wiggling dummies
       Body.setStatic(wheel, true);
+
+      lastRotation = this.rotation;
+      lastTime = Date.now();
+      rotationVelocity = 0;
     },
     onDrag: function() {
       // Set the physical wheel's angle to match the GSAP element's rotation
       const radAngle = this.rotation * Math.PI / 180;
       Body.setAngle(wheel, radAngle);
+
+      // Track rotational velocity manually
+      const now = Date.now();
+      const dt = now - lastTime;
+      if (dt > 0) {
+        const deltaRotation = this.rotation - lastRotation;
+        rotationVelocity = deltaRotation / dt;
+        lastRotation = this.rotation;
+        lastTime = now;
+      }
     },
     onDragEnd: function() {
       // Restore dynamic physics state to the wheel
       Body.setStatic(wheel, false);
 
-      // getVelocity('rotation') returns degrees per second at the moment of release.
-      // Convert to radians per frame (assuming 60 FPS) to set Matter.js angular velocity.
-      const radPerSec = this.getVelocity('rotation') * Math.PI / 180;
-      const radPerFrame = radPerSec / 60;
+      // If they stopped dragging for more than 100ms before releasing, velocity is 0
+      const timeSinceLastDrag = Date.now() - lastTime;
+      if (timeSinceLastDrag > 100) {
+        rotationVelocity = 0;
+      }
+
+      // Convert deg/ms to rad/frame (assuming 60 FPS) to set Matter.js angular velocity.
+      const radPerFrame = rotationVelocity * 0.29088;
 
       // Cap the speed to keep the physics solver stable (0.35 rad/frame ≈ 200 RPM)
       const maxSpeed = 0.35;
