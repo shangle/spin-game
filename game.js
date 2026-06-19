@@ -184,7 +184,7 @@ function buildWheel() {
 
   wheel = Bodies.circle(cx, cy, radius, {
     density: 0.08, // heavy, gives high inertia
-    frictionAir: 0.003, // low damping, spins for a long time
+    frictionAir: 0.01, // realistic damping, slows down naturally
     collisionFilter: {
       category: CATEGORY_WHEEL,
       mask: CATEGORY_MOUSE // collides with mouse interaction only
@@ -395,19 +395,28 @@ function setupMouseInteraction() {
     type: "rotation",
     onDragStart: function() {
       isDraggingWheel = true;
+      // Make the wheel static during drag so it doesn't fight constraints from wiggling dummies
+      Body.setStatic(wheel, true);
     },
     onDrag: function() {
       // Set the physical wheel's angle to match the GSAP element's rotation
       const radAngle = this.rotation * Math.PI / 180;
       Body.setAngle(wheel, radAngle);
-
-      // getVelocity('rotation') returns degrees per second.
-      // Convert to radians per frame (assuming 60 FPS) to match Matter.js angular velocity.
-      const radPerSec = this.getVelocity('rotation') * Math.PI / 180;
-      const radPerFrame = radPerSec / 60;
-      Body.setAngularVelocity(wheel, radPerFrame);
     },
     onDragEnd: function() {
+      // Restore dynamic physics state to the wheel
+      Body.setStatic(wheel, false);
+
+      // getVelocity('rotation') returns degrees per second at the moment of release.
+      // Convert to radians per frame (assuming 60 FPS) to set Matter.js angular velocity.
+      const radPerSec = this.getVelocity('rotation') * Math.PI / 180;
+      const radPerFrame = radPerSec / 60;
+
+      // Cap the speed to keep the physics solver stable (0.35 rad/frame ≈ 200 RPM)
+      const maxSpeed = 0.35;
+      const finalSpeed = Math.max(-maxSpeed, Math.min(maxSpeed, radPerFrame));
+      
+      Body.setAngularVelocity(wheel, finalSpeed);
       isDraggingWheel = false;
     }
   });
